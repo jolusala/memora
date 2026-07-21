@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: memora
+      POSTGRES_USER: memora
+      POSTGRES_PASSWORD: memora_pass_change_me
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://memora:memora_pass_change_me@db:5432/memora
+      JWT_SECRET: cambia-este-secreto-en-produccion
+      PORT: 3000
+      UPLOAD_DIR: /data/uploads
+      GOOGLE_CLIENT_ID: ""
+      GOOGLE_CLIENT_SECRET: ""
+      GOOGLE_CALLBACK_URL: "http://localhost:3000/api/auth/google/callback"
+    volumes:
+      - uploads_data:/data/uploads
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:
+  uploads_data:
