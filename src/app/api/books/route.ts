@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { query } from "@/lib/db";
 import { getSessionUser } from "@/lib/session";
-import { mapPhotobook } from "@/lib/mappers";
+import { mapPhotobook, BOOK_SELECT_SQL } from "@/lib/mappers";
+import { BOOK_TEMPLATES } from "@/lib/book-templates";
 
 export async function GET() {
   const session = await getSessionUser();
@@ -11,14 +12,7 @@ export async function GET() {
   }
 
   const result = await query(
-    `SELECT b.id, b.user_id, b.title, b.description, b.cover_photo_id,
-            b.created_at, b.updated_at,
-            p.filename AS cover_filename,
-            (SELECT count(*) FROM photos ph WHERE ph.book_id = b.id) AS photo_count
-     FROM photobooks b
-     LEFT JOIN photos p ON p.id = b.cover_photo_id
-     WHERE b.user_id = $1
-     ORDER BY b.updated_at DESC`,
+    `${BOOK_SELECT_SQL} WHERE b.user_id = $1 ORDER BY b.updated_at DESC`,
     [session.sub]
   );
 
@@ -31,6 +25,9 @@ export async function GET() {
 const createSchema = z.object({
   title: z.string().trim().min(1, "El título es obligatorio").max(200),
   description: z.string().trim().max(2000).optional(),
+  template: z
+    .enum(BOOK_TEMPLATES.map((t) => t.id) as [string, ...string[]])
+    .optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -49,10 +46,15 @@ export async function POST(req: NextRequest) {
   }
 
   const result = await query(
-    `INSERT INTO photobooks (user_id, title, description)
-     VALUES ($1, $2, $3)
-     RETURNING id, user_id, title, description, cover_photo_id, created_at, updated_at`,
-    [session.sub, parsed.data.title, parsed.data.description ?? null]
+    `INSERT INTO photobooks (user_id, title, description, template)
+     VALUES ($1, $2, $3, $4)
+     RETURNING id, user_id, title, description, template, cover_photo_id, created_at, updated_at`,
+    [
+      session.sub,
+      parsed.data.title,
+      parsed.data.description ?? null,
+      parsed.data.template ?? "custom",
+    ]
   );
 
   const book = mapPhotobook({

@@ -36,8 +36,22 @@ async function initSchema(pool: Pool) {
       title TEXT NOT NULL,
       description TEXT,
       cover_photo_id UUID,
+      template TEXT NOT NULL DEFAULT 'custom',
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+  `);
+  await pool.query(
+    `ALTER TABLE photobooks ADD COLUMN IF NOT EXISTS template TEXT NOT NULL DEFAULT 'custom';`
+  );
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS pages (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      book_id UUID NOT NULL REFERENCES photobooks(id) ON DELETE CASCADE,
+      layout TEXT NOT NULL DEFAULT 'single',
+      position INTEGER NOT NULL DEFAULT 0,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `);
 
@@ -45,6 +59,8 @@ async function initSchema(pool: Pool) {
     CREATE TABLE IF NOT EXISTS photos (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       book_id UUID NOT NULL REFERENCES photobooks(id) ON DELETE CASCADE,
+      page_id UUID REFERENCES pages(id) ON DELETE SET NULL,
+      slot INTEGER,
       filename TEXT NOT NULL,
       original_name TEXT,
       caption TEXT,
@@ -52,6 +68,10 @@ async function initSchema(pool: Pool) {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `);
+  await pool.query(
+    `ALTER TABLE photos ADD COLUMN IF NOT EXISTS page_id UUID REFERENCES pages(id) ON DELETE SET NULL;`
+  );
+  await pool.query(`ALTER TABLE photos ADD COLUMN IF NOT EXISTS slot INTEGER;`);
 
   await pool.query(`
     DO $$
@@ -73,6 +93,8 @@ async function initSchema(pool: Pool) {
   await pool.query(
     `CREATE INDEX IF NOT EXISTS idx_photos_book_id ON photos(book_id);`
   );
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_pages_book_id ON pages(book_id);`);
+  await pool.query(`CREATE INDEX IF NOT EXISTS idx_photos_page_id ON photos(page_id);`);
 }
 
 export function ensureDb(): Promise<void> {
@@ -88,4 +110,22 @@ export async function query<T extends Record<string, unknown> = Record<string, u
 ) {
   await ensureDb();
   return getPool().query<T>(text, params);
+}
+
+export async function withTransaction<T>(
+  fn: (client: import("pg").PoolClient) => Promise<T>
+): Promise<T> {
+  await ensureDb();
+  const client = await getPool().connect();
+  try {
+    await client.query("BEGIN");
+    const result = await fn(client);
+    await client.query("COMMIT");
+    return result;
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
 }
