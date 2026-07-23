@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BookImage } from "lucide-react";
 import { getSessionUser } from "@/lib/session";
 import { Hero } from "@/components/landing/hero";
+import { HowItWorks } from "@/components/landing/how-it-works";
 import { OccasionShowcase } from "@/components/landing/occasion-showcase";
 import { Features } from "@/components/landing/features";
 
@@ -26,6 +27,7 @@ export default async function LandingPage() {
       </header>
 
       <Hero isAuthenticated={Boolean(session)} />
+      <HowItWorks />
       <OccasionShowcase isAuthenticated={Boolean(session)} />
       <Features />
 
