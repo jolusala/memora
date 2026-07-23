@@ -73,7 +73,7 @@ export function UploadDropzone({
         backgroundColor: isDragging ? "hsl(var(--muted))" : "transparent",
       }}
       transition={{ duration: 0.15 }}
-      className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-10 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:p-10"
     >
       <UploadCloud className="h-8 w-8 text-muted-foreground" aria-hidden="true" />
       <p className="font-medium">

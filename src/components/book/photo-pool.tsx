@@ -11,6 +11,8 @@ export function PhotoPool({
   photos,
   coverPhotoId,
   draggingPhotoId,
+  selectedPhotoId,
+  onSelectPhoto,
   onDropUnassigned,
   onSetCover,
   onDelete,
@@ -21,6 +23,8 @@ export function PhotoPool({
   photos: Photo[];
   coverPhotoId: string | null;
   draggingPhotoId: string | null;
+  selectedPhotoId: string | null;
+  onSelectPhoto: (photoId: string | null) => void;
   onDropUnassigned: (photoId: string) => void;
   onSetCover: (photo: Photo) => void;
   onDelete: (photo: Photo) => void;
@@ -56,7 +60,7 @@ export function PhotoPool({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
           <AnimatePresence>
             {photos.map((photo) => (
               <PhotoThumb
@@ -64,6 +68,10 @@ export function PhotoPool({
                 photo={photo}
                 isCover={photo.id === coverPhotoId}
                 isDragging={draggingPhotoId === photo.id}
+                isSelected={selectedPhotoId === photo.id}
+                onActivate={() =>
+                  onSelectPhoto(selectedPhotoId === photo.id ? null : photo.id)
+                }
                 onSetCover={onSetCover}
                 onDelete={onDelete}
                 onCaptionBlur={onCaptionBlur}

@@ -6,6 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,8 @@ export function PageCard({
   photosBySlot,
   coverPhotoId,
   draggingPhotoId,
+  selectedPhotoId,
+  onSelectPhoto,
   onMove,
   onDeletePage,
   onLayoutChange,
@@ -39,6 +42,8 @@ export function PageCard({
   photosBySlot: (Photo | undefined)[];
   coverPhotoId: string | null;
   draggingPhotoId: string | null;
+  selectedPhotoId: string | null;
+  onSelectPhoto: (photoId: string | null) => void;
   onMove: (pageId: string, direction: "up" | "down") => void;
   onDeletePage: (pageId: string) => void;
   onLayoutChange: (pageId: string, layout: LayoutId) => void;
@@ -59,7 +64,7 @@ export function PageCard({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ type: "spring", stiffness: 300, damping: 28 }}
-      className="rounded-xl border border-border bg-card p-4 shadow-sm"
+      className="rounded-xl border border-border bg-card p-3 shadow-sm sm:p-4"
     >
       <div className="mb-3 flex items-center justify-between">
         <span className="text-sm font-medium text-muted-foreground">
@@ -70,7 +75,7 @@ export function PageCard({
             type="button"
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-9 w-9 sm:h-8 sm:w-8"
             disabled={isFirst}
             onClick={() => onMove(page.id, "up")}
             aria-label="Mover página arriba"
@@ -81,7 +86,7 @@ export function PageCard({
             type="button"
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-9 w-9 sm:h-8 sm:w-8"
             disabled={isLast}
             onClick={() => onMove(page.id, "down")}
             aria-label="Mover página abajo"
@@ -94,8 +99,8 @@ export function PageCard({
                 type="button"
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
-                aria-label="Cambiar composición"
+                className="h-9 w-9 sm:h-8 sm:w-8"
+                aria-label="Más opciones de la página"
               >
                 <LayoutGrid className="h-4 w-4" />
               </Button>
@@ -106,22 +111,20 @@ export function PageCard({
                   {PAGE_LAYOUTS[id].label}
                 </DropdownMenuItem>
               ))}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => onDeletePage(page.id)}
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+                Eliminar página
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-destructive hover:text-destructive"
-            onClick={() => onDeletePage(page.id)}
-            aria-label="Eliminar página"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
         </div>
       </div>
 
-      <div className={`grid gap-2 ${layout.gridClassName}`}>
+      <div className={`grid aspect-square gap-2 ${layout.gridClassName}`}>
         {layout.slotSpecs.map((spec, slot) => (
           <PhotoSlot
             key={slot}
@@ -129,6 +132,8 @@ export function PageCard({
             photo={photosBySlot[slot]}
             coverPhotoId={coverPhotoId}
             draggingPhotoId={draggingPhotoId}
+            selectedPhotoId={selectedPhotoId}
+            onSelectPhoto={onSelectPhoto}
             onDropPhoto={(photoId) => onDropPhoto(page.id, slot, photoId)}
             onSetCover={onSetCover}
             onDelete={onDeletePhoto}

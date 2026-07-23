@@ -96,7 +96,7 @@ export function BookHeader({ book }: { book: Photobook }) {
             onBlur={() =>
               title.trim() && title !== book.title && save("title", title.trim())
             }
-            className="h-auto border-none bg-transparent px-0 font-serif text-3xl font-semibold tracking-tight shadow-none focus-visible:ring-0"
+            className="h-auto border-none bg-transparent px-0 font-serif text-2xl font-semibold tracking-tight shadow-none focus-visible:ring-0 sm:text-3xl"
             aria-label="Título del fotolibro"
             maxLength={200}
           />
@@ -113,7 +113,7 @@ export function BookHeader({ book }: { book: Photobook }) {
           />
         </div>
 
-        <div className="flex shrink-0 gap-2">
+        <div className="flex shrink-0 flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={handleExport} disabled={exporting}>
             <Download className="h-4 w-4" />
             {exporting ? "Generando..." : "Exportar a PDF"}
