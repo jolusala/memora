@@ -6,21 +6,21 @@ import { FolderHeart, UploadCloud, Smartphone } from "lucide-react";
 const FEATURES = [
   {
     icon: FolderHeart,
-    title: "Organizá por momentos",
+    title: "Organiza por momentos",
     description:
-      "Creá un fotolibro por viaje, evento o etapa de tu vida y mantené todo ordenado.",
+      "Crea un fotolibro por viaje, evento o etapa de tu vida y mantén todo ordenado.",
   },
   {
     icon: UploadCloud,
-    title: "Subí y reordená fácil",
+    title: "Sube y reordena fácil",
     description:
-      "Arrastrá tus fotos, elegí la portada y ordenalas como quieras con un solo gesto.",
+      "Arrastra tus fotos, elige la portada y ordénalas como quieras con un solo gesto.",
   },
   {
     icon: Smartphone,
-    title: "Accedé desde cualquier lado",
+    title: "Accede desde cualquier lado",
     description:
-      "Tus fotolibros viven en la nube: entrá desde el celular, la tablet o la compu.",
+      "Tus fotolibros viven en la nube: entra desde el celular, la tablet o la computadora.",
   },
 ];
 

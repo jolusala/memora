@@ -23,7 +23,7 @@ export function Hero({ isAuthenticated }: { isAuthenticated: boolean }) {
         transition={{ duration: 0.5, delay: 0.1 }}
         className="max-w-3xl text-balance font-serif text-4xl font-semibold tracking-tight sm:text-6xl"
       >
-        Convertí tus fotos en fotolibros que perduran
+        Convierte tus fotos en fotolibros que perduran
       </motion.h1>
 
       <motion.p
@@ -32,7 +32,7 @@ export function Hero({ isAuthenticated }: { isAuthenticated: boolean }) {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="max-w-xl text-balance text-lg text-muted-foreground"
       >
-        Creá cuenta, subí tus fotos y armá colecciones que podés ver desde cualquier
+        Crea una cuenta, sube tus fotos y arma colecciones que puedes ver desde cualquier
         dispositivo. Cada quien ve solo sus propios recuerdos.
       </motion.p>
 

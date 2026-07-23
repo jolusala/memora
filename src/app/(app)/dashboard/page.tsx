@@ -29,8 +29,8 @@ export default async function DashboardPage() {
           </h1>
           <p className="mt-1 text-muted-foreground">
             {books.length > 0
-              ? "Elegí un fotolibro para verlo o seguir agregando fotos."
-              : "Creá tu primer fotolibro para empezar."}
+              ? "Elige un fotolibro para verlo o seguir agregando fotos."
+              : "Crea tu primer fotolibro para empezar."}
           </p>
         </div>
         {books.length > 0 ? <CreateBookDialog /> : null}

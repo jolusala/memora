@@ -80,7 +80,7 @@ export function BookHeader({ book }: { book: Photobook }) {
             onBlur={() =>
               description !== (book.description ?? "") && save("description", description)
             }
-            placeholder="Agregá una descripción para este fotolibro..."
+            placeholder="Agrega una descripción para este fotolibro..."
             className="min-h-0 resize-none border-none bg-transparent px-0 text-muted-foreground shadow-none focus-visible:ring-0"
             rows={2}
             maxLength={2000}

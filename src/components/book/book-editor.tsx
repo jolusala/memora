@@ -249,7 +249,7 @@ export function BookEditor({
         {sortedPages.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center text-muted-foreground">
             <p className="text-sm">
-              Todavía no armaste ninguna página. Agregá una y arrastrá fotos desde arriba.
+              Todavía no armaste ninguna página. Agrega una y arrastra fotos desde arriba.
             </p>
           </div>
         ) : (

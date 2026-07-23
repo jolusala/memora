@@ -52,7 +52,7 @@ export function PhotoPool({
         <div className="flex flex-col items-center justify-center gap-2 py-10 text-center text-muted-foreground">
           <ImageOff className="h-6 w-6" aria-hidden="true" />
           <p className="text-sm">
-            Todas tus fotos están usadas en páginas. Subí más o quitá alguna de una página.
+            Todas tus fotos están usadas en páginas. Sube más o quita alguna de una página.
           </p>
         </div>
       ) : (

@@ -20,7 +20,7 @@ export function PhotobookGrid({ books }: { books: Photobook[] }) {
           Todavía no tienes fotolibros
         </h2>
         <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-          Creá tu primer fotolibro para empezar a guardar y ordenar tus recuerdos.
+          Crea tu primer fotolibro para empezar a guardar y ordenar tus recuerdos.
         </p>
         <div className="mt-6">
           <CreateBookDialog />

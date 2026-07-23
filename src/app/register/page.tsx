@@ -17,10 +17,10 @@ export default function RegisterPage() {
             Memora
           </Link>
           <h1 className="mt-6 font-serif text-2xl font-semibold tracking-tight">
-            Creá tu cuenta
+            Crea tu cuenta
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Guardá y organizá tus recuerdos en fotolibros digitales.
+            Guarda y organiza tus recuerdos en fotolibros digitales.
           </p>
         </div>
 
