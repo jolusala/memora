@@ -2,7 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { query } from "@/lib/db";
 import { getSessionUser } from "@/lib/session";
-import { mapPhotobook, mapPhoto } from "@/lib/mappers";
+import {
+  mapPhotobook,
+  mapPhoto,
+  mapPage,
+  BOOK_SELECT_SQL,
+  PHOTO_SELECT_SQL,
+  PAGE_SELECT_SQL,
+} from "@/lib/mappers";
 import { deleteUploadedFile } from "@/lib/uploads";
 
 async function getOwnedBook(bookId: string, userId: string) {
@@ -30,20 +37,15 @@ export async function GET(
     return NextResponse.json({ error: "Fotolibro no encontrado" }, { status: 404 });
   }
 
-  const bookResult = await query(
-    `SELECT b.id, b.user_id, b.title, b.description, b.cover_photo_id,
-            b.created_at, b.updated_at,
-            p.filename AS cover_filename,
-            (SELECT count(*) FROM photos ph WHERE ph.book_id = b.id) AS photo_count
-     FROM photobooks b
-     LEFT JOIN photos p ON p.id = b.cover_photo_id
-     WHERE b.id = $1`,
+  const bookResult = await query(`${BOOK_SELECT_SQL} WHERE b.id = $1`, [id]);
+
+  const photosResult = await query(
+    `${PHOTO_SELECT_SQL} WHERE book_id = $1 ORDER BY position ASC, created_at ASC`,
     [id]
   );
 
-  const photosResult = await query(
-    `SELECT id, book_id, filename, original_name, caption, position, created_at
-     FROM photos WHERE book_id = $1 ORDER BY position ASC, created_at ASC`,
+  const pagesResult = await query(
+    `${PAGE_SELECT_SQL} WHERE book_id = $1 ORDER BY position ASC, created_at ASC`,
     [id]
   );
 
@@ -52,6 +54,8 @@ export async function GET(
     book: mapPhotobook(bookResult.rows[0] as any),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     photos: photosResult.rows.map((r) => mapPhoto(r as any)),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    pages: pagesResult.rows.map((r) => mapPage(r as any)),
   });
 }
 

@@ -1,17 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { query } from "@/lib/db";
+import { query, withTransaction } from "@/lib/db";
 import { getSessionUser } from "@/lib/session";
 import { deleteUploadedFile } from "@/lib/uploads";
+import { PAGE_LAYOUTS, isLayoutId } from "@/lib/layouts";
 
 async function getOwnedPhoto(photoId: string, userId: string) {
   const result = await query<{
     id: string;
     book_id: string;
     filename: string;
+    page_id: string | null;
+    slot: number | null;
     user_id: string;
   }>(
-    `SELECT p.id, p.book_id, p.filename, b.user_id
+    `SELECT p.id, p.book_id, p.filename, p.page_id, p.slot, b.user_id
      FROM photos p
      JOIN photobooks b ON b.id = p.book_id
      WHERE p.id = $1`,
@@ -23,7 +26,9 @@ async function getOwnedPhoto(photoId: string, userId: string) {
 }
 
 const updateSchema = z.object({
-  caption: z.string().trim().max(500).nullable(),
+  caption: z.string().trim().max(500).nullable().optional(),
+  pageId: z.string().uuid().nullable().optional(),
+  slot: z.number().int().min(0).max(3).nullable().optional(),
 });
 
 export async function PATCH(
@@ -47,7 +52,70 @@ export async function PATCH(
     return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
   }
 
-  await query(`UPDATE photos SET caption = $1 WHERE id = $2`, [parsed.data.caption, id]);
+  if (parsed.data.caption !== undefined) {
+    await query(`UPDATE photos SET caption = $1 WHERE id = $2`, [parsed.data.caption, id]);
+  }
+
+  if (parsed.data.pageId !== undefined) {
+    if (parsed.data.pageId === null) {
+      await query(`UPDATE photos SET page_id = NULL, slot = NULL WHERE id = $1`, [id]);
+    } else {
+      if (parsed.data.slot === undefined || parsed.data.slot === null) {
+        return NextResponse.json(
+          { error: "Falta la posición dentro de la página" },
+          { status: 400 }
+        );
+      }
+
+      const pageResult = await query<{ id: string; book_id: string; layout: string }>(
+        `SELECT id, book_id, layout FROM pages WHERE id = $1`,
+        [parsed.data.pageId]
+      );
+      const page = pageResult.rows[0];
+      if (!page || page.book_id !== photo.book_id) {
+        return NextResponse.json({ error: "Página inválida" }, { status: 400 });
+      }
+      const layout = isLayoutId(page.layout) ? page.layout : "single";
+      if (parsed.data.slot >= PAGE_LAYOUTS[layout].slots) {
+        return NextResponse.json(
+          { error: "Esa posición no existe en esta página" },
+          { status: 400 }
+        );
+      }
+
+      const targetPageId = parsed.data.pageId;
+      const targetSlot = parsed.data.slot;
+
+      await withTransaction(async (client) => {
+        const occupant = await client.query<{ id: string }>(
+          `SELECT id FROM photos WHERE page_id = $1 AND slot = $2 AND id != $3`,
+          [targetPageId, targetSlot, id]
+        );
+
+        // Vacate this photo's current slot first to avoid transient collisions.
+        await client.query(`UPDATE photos SET page_id = NULL, slot = NULL WHERE id = $1`, [
+          id,
+        ]);
+
+        if (occupant.rows[0]) {
+          await client.query(`UPDATE photos SET page_id = $1, slot = $2 WHERE id = $3`, [
+            photo.page_id,
+            photo.slot,
+            occupant.rows[0].id,
+          ]);
+        }
+
+        await client.query(`UPDATE photos SET page_id = $1, slot = $2 WHERE id = $3`, [
+          targetPageId,
+          targetSlot,
+          id,
+        ]);
+      });
+    }
+  }
+
+  await query(`UPDATE photobooks SET updated_at = now() WHERE id = $1`, [photo.book_id]);
+
   return NextResponse.json({ ok: true });
 }
 

@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { ArrowLeft, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -52,50 +53,64 @@ export function BookHeader({ book }: { book: Photobook }) {
   }
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-      <div className="flex-1 space-y-2">
-        <Input
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          onBlur={() => title.trim() && title !== book.title && save("title", title.trim())}
-          className="h-auto border-none bg-transparent px-0 font-serif text-3xl font-semibold tracking-tight shadow-none focus-visible:ring-0"
-          aria-label="Título del fotolibro"
-          maxLength={200}
-        />
-        <Textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          onBlur={() => description !== (book.description ?? "") && save("description", description)}
-          placeholder="Agregá una descripción para este fotolibro..."
-          className="min-h-0 resize-none border-none bg-transparent px-0 text-muted-foreground shadow-none focus-visible:ring-0"
-          rows={2}
-          maxLength={2000}
-        />
-      </div>
+    <div className="space-y-4">
+      <Link
+        href="/dashboard"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        Volver a mis fotolibros
+      </Link>
 
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button variant="outline" size="sm" className="shrink-0">
-            <Trash2 className="h-4 w-4" />
-            Eliminar
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>¿Eliminar este fotolibro?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Se borrarán permanentemente el fotolibro y todas sus fotos. Esta acción no se
-              puede deshacer.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={deleting}>
-              {deleting ? "Eliminando..." : "Eliminar"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex-1 space-y-2">
+          <Input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onBlur={() =>
+              title.trim() && title !== book.title && save("title", title.trim())
+            }
+            className="h-auto border-none bg-transparent px-0 font-serif text-3xl font-semibold tracking-tight shadow-none focus-visible:ring-0"
+            aria-label="Título del fotolibro"
+            maxLength={200}
+          />
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onBlur={() =>
+              description !== (book.description ?? "") && save("description", description)
+            }
+            placeholder="Agregá una descripción para este fotolibro..."
+            className="min-h-0 resize-none border-none bg-transparent px-0 text-muted-foreground shadow-none focus-visible:ring-0"
+            rows={2}
+            maxLength={2000}
+          />
+        </div>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" size="sm" className="shrink-0">
+              <Trash2 className="h-4 w-4" />
+              Eliminar
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>¿Eliminar este fotolibro?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Se borrarán permanentemente el fotolibro y todas sus fotos. Esta acción no se
+                puede deshacer.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} disabled={deleting}>
+                {deleting ? "Eliminando..." : "Eliminar"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 }

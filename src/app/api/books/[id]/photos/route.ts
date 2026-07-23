@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { query } from "@/lib/db";
 import { getSessionUser } from "@/lib/session";
 import { mapPhoto } from "@/lib/mappers";
@@ -61,7 +60,7 @@ export async function POST(
     const inserted = await query(
       `INSERT INTO photos (book_id, filename, original_name, position)
        VALUES ($1, $2, $3, $4)
-       RETURNING id, book_id, filename, original_name, caption, position, created_at`,
+       RETURNING id, book_id, page_id, slot, filename, original_name, caption, position, created_at`,
       [bookId, saved.filename, saved.originalName, nextPosition++]
     );
     created.push(inserted.rows[0]);
@@ -80,48 +79,4 @@ export async function POST(
     { photos: created.map((r) => mapPhoto(r as any)) },
     { status: 201 }
   );
-}
-
-const reorderSchema = z.object({
-  order: z.array(z.string().uuid()).min(1),
-});
-
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const session = await getSessionUser();
-  if (!session) {
-    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-  }
-  const { id: bookId } = await params;
-
-  const book = await assertOwnedBook(bookId, session.sub);
-  if (!book) {
-    return NextResponse.json({ error: "Fotolibro no encontrado" }, { status: 404 });
-  }
-
-  const body = await req.json().catch(() => null);
-  const parsed = reorderSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json({ error: "Datos inválidos" }, { status: 400 });
-  }
-
-  const owned = await query<{ id: string }>(
-    `SELECT id FROM photos WHERE book_id = $1`,
-    [bookId]
-  );
-  const ownedIds = new Set(owned.rows.map((r) => r.id));
-  if (!parsed.data.order.every((photoId) => ownedIds.has(photoId))) {
-    return NextResponse.json({ error: "El orden incluye fotos inválidas" }, { status: 400 });
-  }
-
-  await Promise.all(
-    parsed.data.order.map((photoId, index) =>
-      query(`UPDATE photos SET position = $1 WHERE id = $2`, [index, photoId])
-    )
-  );
-  await query(`UPDATE photobooks SET updated_at = now() WHERE id = $1`, [bookId]);
-
-  return NextResponse.json({ ok: true });
 }

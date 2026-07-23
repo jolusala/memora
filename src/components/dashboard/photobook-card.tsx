@@ -4,9 +4,12 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { ImageOff } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getBookTemplate } from "@/lib/book-templates";
 import type { Photobook } from "@/types";
 
 export function PhotobookCard({ book }: { book: Photobook }) {
+  const template = getBookTemplate(book.template);
   return (
     <motion.div
       layout
@@ -17,7 +20,7 @@ export function PhotobookCard({ book }: { book: Photobook }) {
     >
       <Link href={`/books/${book.id}`} className="block">
         <Card className="overflow-hidden py-0">
-          <div className="aspect-[4/3] w-full overflow-hidden bg-muted">
+          <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
             {book.coverUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -30,6 +33,15 @@ export function PhotobookCard({ book }: { book: Photobook }) {
                 <ImageOff className="h-8 w-8" aria-hidden="true" />
               </div>
             )}
+            {template.id !== "custom" ? (
+              <Badge
+                variant="accent"
+                className="absolute left-3 top-3 gap-1 shadow-sm"
+              >
+                <template.icon className="h-3 w-3" aria-hidden="true" />
+                {template.label}
+              </Badge>
+            ) : null}
           </div>
           <CardContent className="pt-4">
             <h3 className="truncate font-serif text-lg font-semibold">{book.title}</h3>
