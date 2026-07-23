@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { ImageOff } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getBookTemplate } from "@/lib/book-templates";
+import { getBookTemplate, templateSwatchStyle } from "@/lib/book-templates";
 import type { Photobook } from "@/types";
 
 export function PhotobookCard({ book }: { book: Photobook }) {
@@ -35,8 +35,8 @@ export function PhotobookCard({ book }: { book: Photobook }) {
             )}
             {template.id !== "custom" ? (
               <Badge
-                variant="accent"
-                className="absolute left-3 top-3 gap-1 shadow-sm"
+                className="absolute left-3 top-3 gap-1 border-transparent shadow-sm"
+                style={templateSwatchStyle(template.hue)}
               >
                 <template.icon className="h-3 w-3" aria-hidden="true" />
                 {template.label}

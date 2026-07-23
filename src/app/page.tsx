@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BookImage } from "lucide-react";
 import { getSessionUser } from "@/lib/session";
 import { Hero } from "@/components/landing/hero";
+import { OccasionShowcase } from "@/components/landing/occasion-showcase";
 import { Features } from "@/components/landing/features";
 
 export default async function LandingPage() {
@@ -25,6 +26,7 @@ export default async function LandingPage() {
       </header>
 
       <Hero isAuthenticated={Boolean(session)} />
+      <OccasionShowcase isAuthenticated={Boolean(session)} />
       <Features />
 
       <footer className="border-t border-border py-8">

@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BOOK_TEMPLATES, type BookTemplateId } from "@/lib/book-templates";
+import { BOOK_TEMPLATES, templateSwatchStyle, type BookTemplateId } from "@/lib/book-templates";
 
 export function CreateBookDialog() {
   const router = useRouter();
@@ -68,7 +68,7 @@ export function CreateBookDialog() {
           Nuevo fotolibro
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-xl">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Crear fotolibro</DialogTitle>
@@ -80,7 +80,7 @@ export function CreateBookDialog() {
           <div className="mt-4 space-y-4">
             <div className="space-y-2">
               <Label>Plantilla</Label>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                 {BOOK_TEMPLATES.map((option) => {
                   const isSelected = template === option.id;
                   return (
@@ -92,7 +92,7 @@ export function CreateBookDialog() {
                       whileTap={{ scale: 0.94 }}
                       transition={{ type: "spring", stiffness: 400, damping: 20 }}
                       className={cn(
-                        "relative flex cursor-pointer flex-col items-center gap-1.5 rounded-lg border p-3 text-center transition-colors",
+                        "relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border p-3 text-center transition-colors",
                         isSelected
                           ? "border-accent bg-accent/10"
                           : "border-border hover:bg-muted"
@@ -108,13 +108,12 @@ export function CreateBookDialog() {
                           <Check className="h-3 w-3" />
                         </motion.span>
                       ) : null}
-                      <option.icon
-                        className={cn(
-                          "h-5 w-5",
-                          isSelected ? "text-accent" : "text-muted-foreground"
-                        )}
-                        aria-hidden="true"
-                      />
+                      <span
+                        className="flex h-9 w-9 items-center justify-center rounded-full"
+                        style={templateSwatchStyle(option.hue)}
+                      >
+                        <option.icon className="h-5 w-5" aria-hidden="true" />
+                      </span>
                       <span className="text-xs font-medium leading-tight">
                         {option.label}
                       </span>
