@@ -14,7 +14,7 @@ export const BOOK_TEMPLATES: BookTemplate[] = [
   {
     id: "custom",
     label: "Personalizado",
-    description: "Empezá en blanco y armá el fotolibro a tu manera.",
+    description: "Empieza en blanco y arma el fotolibro a tu manera.",
     icon: BookImage,
     suggestedLayouts: ["single", "duo"],
   },

@@ -42,7 +42,7 @@ export function AddPageDialog({
       </Button>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Elegí una composición</DialogTitle>
+          <DialogTitle>Elige una composición</DialogTitle>
           <DialogDescription>
             Cada página puede tener una o varias fotos, en distintas distribuciones.
           </DialogDescription>

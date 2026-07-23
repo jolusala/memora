@@ -12,7 +12,7 @@ import { GoogleButton } from "@/components/auth/google-button";
 
 const ERROR_MESSAGES: Record<string, string> = {
   google_disabled: "El login con Google no está disponible en este momento.",
-  google_state: "No se pudo verificar la solicitud de Google. Intentá de nuevo.",
+  google_state: "No se pudo verificar la solicitud de Google. Intenta de nuevo.",
   google_unverified: "Tu cuenta de Google no tiene el email verificado.",
   google_failed: "Ocurrió un error al iniciar sesión con Google.",
 };
@@ -97,9 +97,9 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
       </form>
 
       <p className="text-center text-sm text-muted-foreground">
-        ¿No tenés cuenta?{" "}
+        ¿No tienes cuenta?{" "}
         <Link href="/register" className="font-medium text-accent hover:underline">
-          Registrate
+          Regístrate
         </Link>
       </p>
     </div>

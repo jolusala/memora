@@ -77,7 +77,7 @@ export function UploadDropzone({
     >
       <UploadCloud className="h-8 w-8 text-muted-foreground" aria-hidden="true" />
       <p className="font-medium">
-        {uploading ? "Subiendo..." : "Arrastrá tus fotos aquí o hacé clic para elegirlas"}
+        {uploading ? "Subiendo..." : "Arrastra tus fotos aquí o haz clic para elegirlas"}
       </p>
       <p className="text-sm text-muted-foreground">JPG, PNG, WEBP o GIF · hasta 15MB</p>
       <input

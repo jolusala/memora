@@ -95,9 +95,9 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
       </form>
 
       <p className="text-center text-sm text-muted-foreground">
-        ¿Ya tenés cuenta?{" "}
+        ¿Ya tienes cuenta?{" "}
         <Link href="/login" className="font-medium text-accent hover:underline">
-          Iniciá sesión
+          Inicia sesión
         </Link>
       </p>
     </div>

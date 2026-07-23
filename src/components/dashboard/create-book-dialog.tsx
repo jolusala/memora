@@ -73,7 +73,7 @@ export function CreateBookDialog() {
           <DialogHeader>
             <DialogTitle>Crear fotolibro</DialogTitle>
             <DialogDescription>
-              Elegí una plantilla y dale un nombre a tu nueva colección de recuerdos.
+              Elige una plantilla y dale un nombre a tu nueva colección de recuerdos.
             </DialogDescription>
           </DialogHeader>
 

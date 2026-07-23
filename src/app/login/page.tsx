@@ -21,7 +21,7 @@ export default function LoginPage() {
             Bienvenido de nuevo
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Iniciá sesión para ver tus fotolibros.
+            Inicia sesión para ver tus fotolibros.
           </p>
         </div>
 
