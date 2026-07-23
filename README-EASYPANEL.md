@@ -61,5 +61,5 @@ es un `DATABASE_URL` mal copiado.
 - No uses Nixpacks — usa el Dockerfile incluido, es más predecible.
 - Si más adelante quieres mover las fotos a almacenamiento tipo S3 en
   vez del disco del servidor, es un cambio contenido dentro de
-  `server/src/routes/books.routes.js` (la parte de `multer`) — el
-  resto de la app no se entera de dónde viven los archivos.
+  `src/lib/uploads.ts` — el resto de la app no se entera de dónde
+  viven los archivos.

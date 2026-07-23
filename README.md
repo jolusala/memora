@@ -1,28 +1,30 @@
-# memora — app completa (backend + base de datos + login)
+# memora — fotolibros digitales (Next.js + PostgreSQL)
 
 Photobook app con cuentas de usuario reales: cada quien inicia sesión
-(email/contraseña o Google) y solo ve sus propios photobooks. Las fotos
-se guardan en disco y los datos en PostgreSQL — nada vive en el
+(email/contraseña o Google) y solo ve sus propios fotolibros. Las fotos
+se guardan en disco y los datos en PostgreSQL — nada vive solo en el
 navegador, así que se puede entrar desde cualquier dispositivo.
+
+Interfaz construida con Next.js (App Router), Tailwind CSS, componentes
+estilo shadcn/ui y animaciones con [motion](https://motion.dev). El
+diseño (paleta cálida + tipografía editorial) se generó con la skill
+`ui-ux-pro-max`.
 
 ## Estructura
 
 ```
-memora-fullstack/
-  server/            → API en Node.js + Express
-    src/
-      index.js        punto de entrada (API + sirve el cliente)
-      db.js            conexión a PostgreSQL y creación de tablas
-      auth/            JWT + estrategia de Google
-      middleware/       protección de rutas
-      routes/           auth.routes.js, books.routes.js
-  client/             → frontend (HTML + CSS + JS, sin build)
-    index.html
-    styles.css
-    app.js
-  Dockerfile
-  docker-compose.yml   → para probar todo localmente
-  .env.example
+src/
+  app/
+    page.tsx              landing pública
+    login/, register/     autenticación
+    (app)/dashboard/       panel con tus fotolibros
+    (app)/books/[id]/      editor de un fotolibro (fotos, portada, orden)
+    api/                  rutas de la API (auth, books, photos, uploads)
+  components/             UI (shadcn-style) + componentes de producto
+  lib/                    db.ts, auth.ts, uploads.ts, google-oauth.ts
+Dockerfile
+docker-compose.yml         para probar todo localmente
+.env.example
 ```
 
 ## Probarlo en tu computadora
@@ -39,11 +41,20 @@ email y contraseña. El login con Google queda deshabilitado hasta que
 configures las variables `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
 (ver más abajo).
 
+### Desarrollo sin Docker
+
+```
+npm install
+# necesitas un Postgres accesible vía DATABASE_URL (ver .env.example)
+npm run dev
+```
+
 ## Variables de entorno
 
 Ver `.env.example` — cada una está comentada. Las importantes:
 
-- `DATABASE_URL`: cadena de conexión a PostgreSQL.
+- `DATABASE_URL`: cadena de conexión a PostgreSQL. Las tablas se crean
+  automáticamente al arrancar la app.
 - `JWT_SECRET`: cualquier texto largo y secreto (genera uno con
   `openssl rand -hex 32`). Todas las sesiones se firman con esto.
 - `UPLOAD_DIR`: carpeta donde se guardan las fotos. **Debe** apuntar a
@@ -64,7 +75,7 @@ Ver `.env.example` — cada una está comentada. Las importantes:
 4. Copia el Client ID y el Client Secret a tus variables de entorno.
 
 Si no configuras esto, la app funciona igual solo con email y
-contraseña — el botón de Google simplemente no funcionará hasta que
-lo configures.
+contraseña — el botón de Google simplemente no aparece hasta que lo
+configures.
 
 Para el detalle de despliegue en EasyPanel, ver `README-EASYPANEL.md`.
