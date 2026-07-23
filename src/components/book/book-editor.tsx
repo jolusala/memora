@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { toast } from "sonner";
+import { X } from "lucide-react";
 import { UploadDropzone } from "@/components/book/upload-dropzone";
 import { PhotoPool } from "@/components/book/photo-pool";
 import { PageCard } from "@/components/book/page-card";
@@ -26,6 +27,7 @@ export function BookEditor({
   const [pages, setPages] = useState(initialPages);
   const [coverPhotoId, setCoverPhotoId] = useState(book.coverPhotoId);
   const [draggingPhotoId, setDraggingPhotoId] = useState<string | null>(null);
+  const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
 
   const unassigned = photos.filter((p) => !p.pageId);
 
@@ -50,6 +52,7 @@ export function BookEditor({
   async function handleDeletePhoto(photo: Photo) {
     const previous = photos;
     setPhotos((prev) => prev.filter((p) => p.id !== photo.id));
+    setSelectedPhotoId((prev) => (prev === photo.id ? null : prev));
     const res = await fetch(`/api/photos/${photo.id}`, { method: "DELETE" }).catch(
       () => null
     );
@@ -222,15 +225,21 @@ export function BookEditor({
   const template = getBookTemplate(book.template);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-16">
       <UploadDropzone bookId={book.id} onUploaded={handleUploaded} />
 
       <div>
-        <h2 className="mb-3 font-serif text-lg font-semibold">Fotos sin usar</h2>
+        <h2 className="mb-1 font-serif text-lg font-semibold">Fotos sin usar</h2>
+        <p className="mb-3 text-sm text-muted-foreground">
+          Arrastrá una foto a una página, o tocala para seleccionarla y después tocá dónde
+          va.
+        </p>
         <PhotoPool
           photos={unassigned}
           coverPhotoId={coverPhotoId}
           draggingPhotoId={draggingPhotoId}
+          selectedPhotoId={selectedPhotoId}
+          onSelectPhoto={setSelectedPhotoId}
           onDropUnassigned={(photoId) => assignPhoto(photoId, null, null)}
           onSetCover={handleSetCover}
           onDelete={handleDeletePhoto}
@@ -241,7 +250,7 @@ export function BookEditor({
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-serif text-lg font-semibold">Páginas del fotolibro</h2>
           <AddPageDialog onAdd={handleAddPage} suggestedLayouts={template.suggestedLayouts} />
         </div>
@@ -249,11 +258,11 @@ export function BookEditor({
         {sortedPages.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center text-muted-foreground">
             <p className="text-sm">
-              Todavía no armaste ninguna página. Agrega una y arrastra fotos desde arriba.
+              Todavía no armaste ninguna página. Agregá una y arrastrá fotos desde arriba.
             </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <AnimatePresence>
               {sortedPages.map((page, index) => (
                 <PageCard
@@ -265,6 +274,8 @@ export function BookEditor({
                   photosBySlot={photosBySlotFor(page.id, PAGE_LAYOUTS[page.layout].slots)}
                   coverPhotoId={coverPhotoId}
                   draggingPhotoId={draggingPhotoId}
+                  selectedPhotoId={selectedPhotoId}
+                  onSelectPhoto={setSelectedPhotoId}
                   onMove={handleMovePage}
                   onDeletePage={handleDeletePage}
                   onLayoutChange={handleLayoutChange}
@@ -281,6 +292,32 @@ export function BookEditor({
           </div>
         )}
       </div>
+
+      <AnimatePresence>
+        {selectedPhotoId ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+            className="fixed inset-x-0 bottom-4 z-30 flex justify-center px-4"
+          >
+            <div className="flex items-center gap-3 rounded-full border border-border bg-card px-4 py-2 shadow-lg">
+              <span className="text-sm font-medium">
+                Foto seleccionada — tocá una casilla para colocarla
+              </span>
+              <button
+                type="button"
+                onClick={() => setSelectedPhotoId(null)}
+                className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-muted hover:bg-border"
+                aria-label="Cancelar selección"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }
