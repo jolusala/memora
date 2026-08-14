@@ -15,7 +15,7 @@ export default async function LandingPage() {
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-serif text-xl font-semibold">
             <BookImage className="h-6 w-6 text-accent" aria-hidden="true" />
-            Memora
+            Picbook
           </Link>
           <Link
             href={session ? "/dashboard" : "/login"}
@@ -33,7 +33,7 @@ export default async function LandingPage() {
 
       <footer className="border-t border-border py-8">
         <div className="container text-center text-sm text-muted-foreground">
-          Memora — un lugar para guardar tus recuerdos.
+          Picbook — un lugar para guardar tus recuerdos.
         </div>
       </footer>
     </div>

@@ -6,7 +6,7 @@ import { CreateBookDialog } from "@/components/dashboard/create-book-dialog";
 import type { Photobook } from "@/types";
 
 export const metadata = {
-  title: "Tus fotolibros — Memora",
+  title: "Tus fotolibros — Picbook",
 };
 
 export default async function DashboardPage() {

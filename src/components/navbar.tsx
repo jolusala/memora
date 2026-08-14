@@ -38,7 +38,7 @@ export function Navbar({ user }: { user: PublicUser }) {
           className="flex items-center gap-2 font-serif text-xl font-semibold tracking-tight"
         >
           <BookImage className="h-6 w-6 text-accent" aria-hidden="true" />
-          Memora
+          Picbook
         </Link>
 
         <DropdownMenu>

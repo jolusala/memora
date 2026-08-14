@@ -16,7 +16,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Memora — tus recuerdos en un fotolibro",
+  title: "Picbook — tus recuerdos en un fotolibro",
   description:
     "Crea, organiza y comparte fotolibros digitales. Cada quien inicia sesión y ve solo sus propios recuerdos.",
 };

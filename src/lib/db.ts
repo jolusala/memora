@@ -1,17 +1,17 @@
 import { Pool } from "pg";
 
 declare global {
-  var __memoraPool: Pool | undefined;
-  var __memoraDbReady: Promise<void> | undefined;
+  var __picbookPool: Pool | undefined;
+  var __picbookDbReady: Promise<void> | undefined;
 }
 
 export function getPool(): Pool {
-  if (!global.__memoraPool) {
-    global.__memoraPool = new Pool({
+  if (!global.__picbookPool) {
+    global.__picbookPool = new Pool({
       connectionString: process.env.DATABASE_URL,
     });
   }
-  return global.__memoraPool;
+  return global.__picbookPool;
 }
 
 async function initSchema(pool: Pool) {
@@ -102,10 +102,10 @@ async function initSchema(pool: Pool) {
 }
 
 export function ensureDb(): Promise<void> {
-  if (!global.__memoraDbReady) {
-    global.__memoraDbReady = initSchema(getPool());
+  if (!global.__picbookDbReady) {
+    global.__picbookDbReady = initSchema(getPool());
   }
-  return global.__memoraDbReady;
+  return global.__picbookDbReady;
 }
 
 export async function query<T extends Record<string, unknown> = Record<string, unknown>>(

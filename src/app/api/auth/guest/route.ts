@@ -6,7 +6,7 @@ import { setAuthCookie } from "@/lib/auth-cookie";
 import type { PublicUser } from "@/types";
 
 export async function POST() {
-  const email = `guest-${randomUUID()}@guest.memora.local`;
+  const email = `guest-${randomUUID()}@guest.picbook.local`;
 
   const result = await query<{
     id: string;

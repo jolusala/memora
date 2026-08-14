@@ -1,4 +1,4 @@
-# memora — despliegue en EasyPanel
+# picbook — despliegue en EasyPanel
 
 Esta app necesita 3 cosas en EasyPanel: una base de datos PostgreSQL,
 un volumen persistente para las fotos, y el servicio de la app.
@@ -6,7 +6,7 @@ un volumen persistente para las fotos, y el servicio de la app.
 ## 1. Crear la base de datos
 
 En EasyPanel: **+ Crear servicio → PostgreSQL** (plantilla incluida).
-Ponle un nombre, por ejemplo `memora-db`. Cuando esté listo, EasyPanel
+Ponle un nombre, por ejemplo `picbook-db`. Cuando esté listo, EasyPanel
 te da los datos de conexión (host, usuario, contraseña, puerto,
 nombre de base). Con eso arma tu `DATABASE_URL`:
 

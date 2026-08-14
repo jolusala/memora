@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   const code = req.nextUrl.searchParams.get("code");
   const state = req.nextUrl.searchParams.get("state");
-  const savedState = req.cookies.get("memora_oauth_state")?.value;
+  const savedState = req.cookies.get("picbook_oauth_state")?.value;
 
   if (!code || !state || !savedState || state !== savedState) {
     return NextResponse.redirect(`${origin}/login?error=google_state`);
@@ -53,7 +53,7 @@ export async function GET(req: NextRequest) {
     const token = await signSession({ sub: user.id, email: user.email, name: user.name });
     const response = NextResponse.redirect(`${origin}/dashboard`);
     setAuthCookie(response, token);
-    response.cookies.set("memora_oauth_state", "", { path: "/", maxAge: 0 });
+    response.cookies.set("picbook_oauth_state", "", { path: "/", maxAge: 0 });
     return response;
   } catch (err) {
     console.error("Google OAuth error", err);

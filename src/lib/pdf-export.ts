@@ -67,7 +67,7 @@ export async function generateBookPdf(
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
   doc.setTitle(book.title);
-  doc.setProducer("Memora");
+  doc.setProducer("Picbook");
 
   const serif = await doc.embedFont(StandardFonts.TimesRomanBold);
   const sans = await doc.embedFont(StandardFonts.Helvetica);
