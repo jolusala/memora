@@ -6,6 +6,7 @@ export interface PublicUser {
   email: string;
   name: string;
   avatarUrl: string | null;
+  isGuest: boolean;
 }
 
 export interface Photo {

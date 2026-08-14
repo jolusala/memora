@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { GoogleButton } from "@/components/auth/google-button";
+import { GuestButton } from "@/components/auth/guest-button";
 
 export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
   const router = useRouter();
@@ -42,16 +43,15 @@ export function RegisterForm({ googleEnabled }: { googleEnabled: boolean }) {
 
   return (
     <div className="space-y-6">
-      {googleEnabled ? (
-        <>
-          <GoogleButton />
-          <div className="flex items-center gap-3">
-            <Separator className="flex-1" />
-            <span className="text-xs text-muted-foreground">o con tu email</span>
-            <Separator className="flex-1" />
-          </div>
-        </>
-      ) : null}
+      <div className="space-y-3">
+        {googleEnabled ? <GoogleButton /> : null}
+        <GuestButton />
+      </div>
+      <div className="flex items-center gap-3">
+        <Separator className="flex-1" />
+        <span className="text-xs text-muted-foreground">o con tu email</span>
+        <Separator className="flex-1" />
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">

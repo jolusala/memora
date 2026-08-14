@@ -52,10 +52,18 @@ export function Navbar({ user }: { user: PublicUser }) {
             <DropdownMenuLabel>
               <p className="font-medium">{user.name}</p>
               <p className="truncate text-xs font-normal text-muted-foreground">
-                {user.email}
+                {user.isGuest ? "Cuenta de invitado" : user.email}
               </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            {user.isGuest ? (
+              <DropdownMenuItem asChild>
+                <Link href="/register">
+                  <UserIcon className="h-4 w-4" />
+                  Crear cuenta para guardar tus datos
+                </Link>
+              </DropdownMenuItem>
+            ) : null}
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
               Cerrar sesión

@@ -19,7 +19,8 @@ export default async function AppLayout({
     email: string;
     name: string;
     avatar_url: string | null;
-  }>(`SELECT id, email, name, avatar_url FROM users WHERE id = $1`, [session.sub]);
+    is_guest: boolean;
+  }>(`SELECT id, email, name, avatar_url, is_guest FROM users WHERE id = $1`, [session.sub]);
 
   const row = result.rows[0];
   if (!row) {
@@ -31,6 +32,7 @@ export default async function AppLayout({
     email: row.email,
     name: row.name,
     avatarUrl: row.avatar_url,
+    isGuest: row.is_guest,
   };
 
   return (

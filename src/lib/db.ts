@@ -25,9 +25,13 @@ async function initSchema(pool: Pool) {
       name TEXT NOT NULL,
       avatar_url TEXT,
       google_id TEXT UNIQUE,
+      is_guest BOOLEAN NOT NULL DEFAULT false,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `);
+  await pool.query(
+    `ALTER TABLE users ADD COLUMN IF NOT EXISTS is_guest BOOLEAN NOT NULL DEFAULT false;`
+  );
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS photobooks (
