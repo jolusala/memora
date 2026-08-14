@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 
 const PRINT_PRICE = 24.99;
+const PRINT_PRICE_LABEL = `$${PRINT_PRICE.toFixed(2)} USD`;
 
 function formatCardNumber(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 16);
@@ -78,8 +79,9 @@ export function PrintCheckoutDialog({ bookTitle }: { bookTitle: string }) {
                 <Badge variant="outline">Demo</Badge>
               </div>
               <DialogDescription>
-                &quot;{bookTitle}&quot; · tapa dura · envío estándar. Esta es una demostración:
-                no se procesa ningún cobro real.
+                &quot;{bookTitle}&quot; · tapa dura · envío estándar ·{" "}
+                <span className="font-semibold text-foreground">{PRINT_PRICE_LABEL}</span>. Esta
+                es una demostración: no se procesa ningún cobro real.
               </DialogDescription>
             </DialogHeader>
 
@@ -146,7 +148,7 @@ export function PrintCheckoutDialog({ bookTitle }: { bookTitle: string }) {
                       Procesando pago...
                     </>
                   ) : (
-                    `Pagar $${PRINT_PRICE.toFixed(2)}`
+                    `Pagar ${PRINT_PRICE_LABEL}`
                   )}
                 </Button>
               </DialogFooter>
@@ -157,8 +159,8 @@ export function PrintCheckoutDialog({ bookTitle }: { bookTitle: string }) {
             <CheckCircle2 className="h-12 w-12 text-accent" aria-hidden="true" />
             <h3 className="font-serif text-xl font-semibold">¡Pago simulado exitoso!</h3>
             <p className="text-sm text-muted-foreground">
-              Recibimos tu pedido de &quot;{bookTitle}&quot; por ${PRINT_PRICE.toFixed(2)}. Esto
-              es solo una demostración, no se realizó ningún cobro real.
+              Recibimos tu pedido de &quot;{bookTitle}&quot; por {PRINT_PRICE_LABEL}. Esto es
+              solo una demostración, no se realizó ningún cobro real.
             </p>
             <Button variant="outline" onClick={() => handleOpenChange(false)} className="mt-2">
               Cerrar
