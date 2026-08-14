@@ -28,8 +28,9 @@ export async function POST(req: NextRequest) {
     name: string;
     avatar_url: string | null;
     password_hash: string | null;
+    is_guest: boolean;
   }>(
-    `SELECT id, email, name, avatar_url, password_hash FROM users WHERE email = $1`,
+    `SELECT id, email, name, avatar_url, password_hash, is_guest FROM users WHERE email = $1`,
     [email]
   );
   const user = result.rows[0];
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
     email: user.email,
     name: user.name,
     avatarUrl: user.avatar_url,
+    isGuest: user.is_guest,
   };
 
   const response = NextResponse.json({ user: publicUser });

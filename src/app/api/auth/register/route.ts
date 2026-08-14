@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
     email: user.email,
     name: user.name,
     avatarUrl: user.avatar_url,
+    isGuest: false,
   };
 
   const response = NextResponse.json({ user: publicUser }, { status: 201 });

@@ -11,6 +11,7 @@ import {
   PAGE_SELECT_SQL,
 } from "@/lib/mappers";
 import { deleteUploadedFile } from "@/lib/uploads";
+import { BOOK_TEMPLATES } from "@/lib/book-templates";
 
 async function getOwnedBook(bookId: string, userId: string) {
   const result = await query<{ id: string; user_id: string }>(
@@ -63,6 +64,9 @@ const updateSchema = z.object({
   title: z.string().trim().min(1).max(200).optional(),
   description: z.string().trim().max(2000).nullable().optional(),
   coverPhotoId: z.string().uuid().nullable().optional(),
+  template: z
+    .enum(BOOK_TEMPLATES.map((t) => t.id) as [string, ...string[]])
+    .optional(),
 });
 
 export async function PATCH(
@@ -114,6 +118,10 @@ export async function PATCH(
   if (parsed.data.coverPhotoId !== undefined) {
     fields.push(`cover_photo_id = $${idx++}`);
     values.push(parsed.data.coverPhotoId);
+  }
+  if (parsed.data.template !== undefined) {
+    fields.push(`template = $${idx++}`);
+    values.push(parsed.data.template);
   }
   fields.push(`updated_at = now()`);
 

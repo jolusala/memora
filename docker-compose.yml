@@ -4,9 +4,9 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: memora
-      POSTGRES_USER: memora
-      POSTGRES_PASSWORD: memora_pass_change_me
+      POSTGRES_DB: picbook
+      POSTGRES_USER: picbook
+      POSTGRES_PASSWORD: picbook_pass_change_me
     volumes:
       - db_data:/var/lib/postgresql/data
 
@@ -16,7 +16,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://memora:memora_pass_change_me@db:5432/memora
+      DATABASE_URL: postgres://picbook:picbook_pass_change_me@db:5432/picbook
       JWT_SECRET: cambia-este-secreto-en-produccion
       PORT: 3000
       UPLOAD_DIR: /data/uploads

@@ -14,7 +14,8 @@ export async function GET() {
     email: string;
     name: string;
     avatar_url: string | null;
-  }>(`SELECT id, email, name, avatar_url FROM users WHERE id = $1`, [session.sub]);
+    is_guest: boolean;
+  }>(`SELECT id, email, name, avatar_url, is_guest FROM users WHERE id = $1`, [session.sub]);
 
   const user = result.rows[0];
   if (!user) {
@@ -26,6 +27,7 @@ export async function GET() {
     email: user.email,
     name: user.name,
     avatarUrl: user.avatar_url,
+    isGuest: user.is_guest,
   };
   return NextResponse.json({ user: publicUser });
 }

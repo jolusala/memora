@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
-import { Plus, Check } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,7 +17,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BOOK_TEMPLATES, templateSwatchStyle, type BookTemplateId } from "@/lib/book-templates";
+import { TemplateGrid } from "@/components/book/template-grid";
+import type { BookTemplateId } from "@/lib/book-templates";
 
 export function CreateBookDialog() {
   const router = useRouter();
@@ -80,47 +79,7 @@ export function CreateBookDialog() {
           <div className="mt-4 space-y-4">
             <div className="space-y-2">
               <Label>Plantilla</Label>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                {BOOK_TEMPLATES.map((option) => {
-                  const isSelected = template === option.id;
-                  return (
-                    <motion.button
-                      key={option.id}
-                      type="button"
-                      onClick={() => setTemplate(option.id)}
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.94 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                      className={cn(
-                        "relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border p-3 text-center transition-colors",
-                        isSelected
-                          ? "border-accent bg-accent/10"
-                          : "border-border hover:bg-muted"
-                      )}
-                      aria-pressed={isSelected}
-                      title={option.description}
-                    >
-                      {isSelected ? (
-                        <motion.span
-                          layoutId="template-check"
-                          className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-accent-foreground"
-                        >
-                          <Check className="h-3 w-3" />
-                        </motion.span>
-                      ) : null}
-                      <span
-                        className="flex h-9 w-9 items-center justify-center rounded-full"
-                        style={templateSwatchStyle(option.hue)}
-                      >
-                        <option.icon className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                      <span className="text-xs font-medium leading-tight">
-                        {option.label}
-                      </span>
-                    </motion.button>
-                  );
-                })}
-              </div>
+              <TemplateGrid value={template} onChange={setTemplate} layoutId="create-template-check" />
             </div>
 
             <div className="space-y-2">

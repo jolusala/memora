@@ -19,6 +19,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { PrintCheckoutDialog } from "@/components/book/print-checkout-dialog";
+import { DesignPickerDialog } from "@/components/book/design-picker-dialog";
 import type { Photobook } from "@/types";
 
 export function BookHeader({ book }: { book: Photobook }) {
@@ -114,6 +116,10 @@ export function BookHeader({ book }: { book: Photobook }) {
         </div>
 
         <div className="flex shrink-0 flex-wrap gap-2">
+          <DesignPickerDialog bookId={book.id} currentTemplate={book.template} />
+
+          <PrintCheckoutDialog bookTitle={book.title} />
+
           <Button variant="outline" size="sm" onClick={handleExport} disabled={exporting}>
             <Download className="h-4 w-4" />
             {exporting ? "Generando..." : "Exportar a PDF"}

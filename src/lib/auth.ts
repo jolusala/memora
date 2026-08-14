@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 
-export const AUTH_COOKIE = "memora_token";
+export const AUTH_COOKIE = "picbook_token";
 const TOKEN_TTL = "30d";
 
 function getSecretKey() {

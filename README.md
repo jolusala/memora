@@ -1,4 +1,4 @@
-# memora — fotolibros digitales (Next.js + PostgreSQL)
+# picbook — fotolibros digitales (Next.js + PostgreSQL)
 
 Photobook app con cuentas de usuario reales: cada quien inicia sesión
 (email/contraseña o Google) y solo ve sus propios fotolibros. Las fotos

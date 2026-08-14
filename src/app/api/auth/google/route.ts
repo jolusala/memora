@@ -12,7 +12,7 @@ export async function GET() {
 
   const state = randomUUID();
   const response = NextResponse.redirect(buildGoogleAuthUrl(state));
-  response.cookies.set("memora_oauth_state", state, {
+  response.cookies.set("picbook_oauth_state", state, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
